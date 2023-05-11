@@ -1,0 +1,14 @@
+name: INF105
+title: INF105
+username:
+account: bendyadony
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9084413
+bundleId: 7202596
+url: https://bendyadony.shinyapps.io/INF105/
+when: 1683777368.92904
+lastSyncTime: 1683777368.92905
+asMultiple: FALSE
+asStatic: FALSE
+additionalFiles: INTRA_TAUX DE CHANGE HAÏTI.Rproj
