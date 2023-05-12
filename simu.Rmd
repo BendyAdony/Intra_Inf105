@@ -1,12 +1,10 @@
 ---
-title: "Intra_Taux de changes Haïti"
-author: "Bendy,Fabrice,Peter, Darwin"
+title: "BRH connect"
+author: "Lebron James"
 date: "`r Sys.Date()`"
-output:
-  flexdashboard::flex_dashboard: null
+output: 
+ flexdashboard::flex_dashboard:
 runtime: shiny
-resource_files:
-- INTRA_TAUX DE CHANGE HAÏTI.Rproj
 ---
 
 ```{r setup, include=FALSE}
@@ -70,7 +68,7 @@ TDJ
 ```
 
 
-Taux de jour: Table
+Taux de change Table
 ===============================================================================
 
 ### Tableau : Taux du jours
@@ -86,45 +84,60 @@ formattable(TAPB)
 ```
 
 
-Taux du jour: Global 
+Taux de change Moyen 
 ==============================================================================
 
 ### Taux des différents marchés à l'achat et à la vente
 
 ```{r echo=FALSE}
 #Graphe du Taux des différents marchés à l'achat
+library(ggplot2)
+library(reshape2)
+library(melt)
 
-TDJA <- ggplot(data = TDJ, aes(x = CATEGORIES,y=ACHATS,fill = CATEGORIES)) + geom_col(just = 0)
-plot1<-ggplotly(TDJA)
-
-#Graphe du Taux des différents marchés à la vente
-
-TDJV <- ggplot(data = TDJ, aes(x = CATEGORIES,y=VENTES,fill = CATEGORIES)) + geom_col(just = 0)
-plot2<-ggplotly(TDJV)
-
-# Afficher les graphiques dans une grille 
-subplot(
-  plot1, 
-  plot2, 
-  nrows = 2, 
-  shareX = TRUE, 
-  titleX = FALSE, 
-  titleY = TRUE, 
-  margin = 0.05
+# Create data
+data <- data.frame(
+  name=CATEGORIES,
+  value=ACHATS,
+  value2=VENTES
 )
+
+# Melt data
+data <- melt(data,id="name")
+
+# Plot
+ggplot(data,aes(x=name,y=value,fill=variable)) +
+  geom_bar(stat="identity",position="dodge") +
+  scale_y_continuous(name="value",sec.axis = sec_axis(~./10,name = "value2")) +
+  theme(legend.position="top")
+
 
 ```
 
 
 
-Taux du jour: Par Banque
+Taux pratiqué par les Banques
 ================================================================================
 ### Taux pratiqué par les banques à la vente
 
 ```{r echo=FALSE}
-fig <- plot_ly(TAPB, x = ~CATEGORIES, y = ~ACHATS,color ="yellow", type = 'bar', name = 'ACHATS')
-fig <- fig %>% add_trace(y = ~VENTES, name = 'VENTES', color="blue")
-fig <- fig %>% layout(yaxis = list(title = 'Taux du jour'),plot_bgcolor="black" , barmode = 'group')
-fig
+ TAPBA<- ggplot(data = TAPB, aes(x = CATEGORIES,y=ACHATS,fill = CATEGORIES)) +
+            geom_col(just = 0.5)
+plot3<-ggplotly(TAPBA)
+
+TAPBV<- ggplot(data = TAPB, aes(x = CATEGORIES,y=VENTES,fill = CATEGORIES)) +
+            geom_col(just = 0.5)
+plot4<-ggplotly(TAPBV)
+
+# Afficher les graphiques dans une grille 2x1
+subplot(
+  plot3, 
+  plot4,
+  nrows  = 2,
+  shareX = TRUE, 
+  titleX = FALSE, 
+  titleY = TRUE,
+  margin = 0.05
+)
 
 ```
